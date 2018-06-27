@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/patrickjmcd/rss-manager/issues"
   },
-  "homepage": "https://github.com/patrickjmcd/rss-manager#readme",
+  "homepage": "https://patrickjmcd.github.io/rss-manager",
   "dependencies": {
     "axios": "^0.18.0",
     "firebase": "^5.1.0",
@@ -43,6 +44,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "eslint-config-rallycoding": "^3.2.0",
+    "gh-pages": "^1.2.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.12.0",
