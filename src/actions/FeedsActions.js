@@ -1,5 +1,5 @@
 import RSSParser from 'rss-parser';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import _ from 'lodash';
 
 import {
@@ -65,6 +65,10 @@ const checkFeed = (url, cb) => {
     });
 };
 
+const firebaseify = (rawString) => {
+    return rawString.replace(/[.#$\[\]]/g, '|');
+}
+
 
 export const addFeed = ({ url }) => {
     console.log('adding url', url);
@@ -79,7 +83,7 @@ export const addFeed = ({ url }) => {
                 });
             } else {
                 firebase.database().ref(`feeds/${currentUser.uid}`)
-                .child(feed.title).set({ url })
+                .child(firebaseify(feed.title)).set({ url })
                 .then(() => {
                     dispatch({
                         type: FEED_LIST_UPDATED,
@@ -100,7 +104,7 @@ export const removeFeed = ({ url, title }) => {
     const { currentUser } = firebase.auth();
     return (dispatch) => {
         firebase.database().ref(`feeds/${currentUser.uid}`)
-            .child(title).remove()
+            .child(firebaseify(title)).remove()
             .then(() => {
                 dispatch({
                     type: FEED_REMOVED,

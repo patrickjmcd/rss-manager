@@ -2,9 +2,44 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { userLogout } from '../actions';
+import { userLogout, addFeed } from '../actions';
 
 class Header extends Component {
+    state = {
+        newFeedUrl: ''
+    }
+
+    newFeedButtonPressed(event) {
+        event.preventDefault();
+        console.log(this.state.newFeedUrl);
+        this.props.addFeed({ url: this.state.newFeedUrl });
+        this.setState({ newFeedUrl: '' });
+    }
+
+    renderForm() {
+        const { user } = this.props;
+        if (user) {
+            return (
+                <form className="form-inline ml-auto my-2 my-lg-0">
+                    <input
+                        id="feedUrl"
+                        className="form-control mr-sm-2"
+                        type="text"
+                        onChange={(e) => this.setState({ newFeedUrl: e.target.value })}
+                        placeholder="RSS Feed URL"
+                        value={this.state.newFeedUrl}
+                    />
+
+                    <button
+                        className="btn btn-outline-success my-2 my-sm-0"
+                        onClick={this.newFeedButtonPressed.bind(this)}
+                    >
+                        Add Feed
+                    </button>
+                </form>
+            );
+        }
+    }
 
     renderLogOutButton() {
         const { user } = this.props;
@@ -12,7 +47,7 @@ class Header extends Component {
             return (
                 <li className="nav-item">
                     <button
-                        className="btn btn-danger"
+                        className="btn btn-outline-danger"
                         onClick={() => this.props.userLogout()}
                     >Logout {user.user.email}</button>
                 </li>
@@ -37,22 +72,7 @@ class Header extends Component {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    {/* <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
-                            <Link
-                                className="nav-link"
-                                to="/main"
-                            >
-                                    Home <span className="sr-only">(current)</span>
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/sample">Sample</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link disabled" to="#">Disabled</Link>
-                        </li>
-                    </ul> */}
+                    {this.renderForm()}
                     <ul className="navbar-nav ml-auto">
                         {this.renderLogOutButton()}
                     </ul>
@@ -69,4 +89,4 @@ const mapStateToProps = (state) => {
         };
 };
 
-export default connect(mapStateToProps, { userLogout })(Header);
+export default connect(mapStateToProps, { userLogout, addFeed })(Header);

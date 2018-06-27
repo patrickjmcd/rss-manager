@@ -14,86 +14,59 @@ class FeedOverview extends Component {
         }
     }
 
-    renderDetail() {
-        const { selected, feed } = this.props;
-        if (selected === feed.title) {
-            const feedMap = _.map(feed.items, (item, i) => (
-                <tr key={i}>
-                    <td>{item.title}</td>
-                    <td>{item.pubDate}</td>
-                    <td dangerouslySetInnerHTML={{ __html: item.content }} />
-                    <td>
-                        <a
-                            className="btn btn-primary"
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Go to Article
-                        </a>
-                    </td>
-                </tr>
-            ));
-            return (
-                <div>
-                    <hr />
-                    <table className="table">
-                        <tbody>
-                            {feedMap}
-                        </tbody>
-                    </table>
-                </div>
-            );
-        }
-    }
 
     render() {
         const { feed } = this.props;
         if (!feed) {
-            return <h1>Loading...</h1>;
+            return <h1>Loading... </h1>;
         }
+
+        const imageUrl = feed.image ? feed.image.url : '';
+
         return (
             <div className="col-12" style={styles.cardStyle}>
                 <div className="row" style={styles.rowStyle}>
-                    <div className="col-4">
-                        <img src={feed.image.url} alt="" style={{ maxHeight: 50 }} />
-                        <h5>{feed.title}</h5>
-                    </div>
-
-                    <div className="col-2">
+                    <div className="col-5">
+                        <img src={imageUrl} alt="" style={{ maxHeight: 50 }} />
                         <h5>
+                            {`${feed.title}  `}
+
                             <span
                                 className="badge badge-primary"
                             >
                                     {feed.items ? feed.items.length : '0'} articles
                             </span>
+
                         </h5>
                     </div>
 
-                    <div className="col-3">
+                    <div className="col-5">
                         <p className="card-text">{feed.description}</p>
                     </div>
 
                     <div className="col-2">
-                        <button
-                            className="btn btn-danger"
-                            onClick={() => this.props.removeFeed({
-                                url: feed.url,
-                                title: feed.title
-                            })}
-                        >
-                            Remove Feed
-                        </button>
-                    </div>
+                        <div className="row">
+                            <button
+                                className="btn btn-outline-primary"
+                                style={styles.buttonStyle}
+                                onClick={() => this.toggleSelected()}
+                            >View Articles</button>
+                        </div>
+                        <div className="row">
+                            <button
+                                className="btn btn-outline-danger"
+                                style={styles.buttonStyle}
+                                onClick={() => this.props.removeFeed({
+                                    url: feed.url,
+                                    title: feed.title
+                                })}
+                            >
+                                Remove Feed
+                            </button>
+                        </div>
 
-                    <div className="col-1">
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => this.toggleSelected()}
-                        >V</button>
                     </div>
                 </div>
-                {this.renderDetail()}
             </div>
         );
     }
@@ -101,8 +74,8 @@ class FeedOverview extends Component {
 
 const styles = {
     cardStyle: {
-        borderRadius: 10,
-        border: '2px solid #ccc',
+        borderRadius: 5,
+        border: '1px solid #ccc',
         marginBottom: 20,
         marginLeft: 10,
         marginRight: 10
@@ -110,6 +83,10 @@ const styles = {
     rowStyle: {
         paddingTop: 10,
         paddingBottom: 10
+    },
+    buttonStyle: {
+        width: '90%',
+        marginBottom: 5
     }
 };
 
