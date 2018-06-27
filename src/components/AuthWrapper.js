@@ -22,7 +22,7 @@ class AuthWrapper extends Component {
 
     render() {
         return (
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <BrowserRouter>
                 <div>
                     <Header />
                     <Switch>

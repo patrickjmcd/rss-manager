@@ -1,35 +1,117 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { selectFeed, removeFeed } from '../actions';
 
 class FeedDetail extends Component {
+    state = {
+        sortKey: 'pubDate',
+        sortDir: 'asc'
+    }
+
+    setSort(key) {
+        if (this.state.sortKey === key) {
+            this.setState({ sortDir: this.state.sortDir === 'asc' ? 'desc' : 'asc' });
+        } else {
+            this.setState({ sortKey: key, sortDir: 'asc' });
+        }
+    }
+
+    renderSortIndicator(key) {
+        if (this.state.sortKey === key) {
+            if (this.state.sortDir === 'asc') {
+                return ' [asc]';
+            }
+            return ' [desc]';
+        }
+    }
+
+    renderOldestAndNewest() {
+        const { feed } = this.props;
+        const sortedItems = _.sortBy(feed.items, (f) => (new Date(f.pubDate)));
+        if (sortedItems.length > 0) {
+            const oldest = moment(sortedItems[0].pubDate);
+            const newest = moment(sortedItems[sortedItems.length - 1].pubDate);
+            return (
+                <div>
+                    <p>Oldest Article: {oldest.format('MMMM Do YYYY, h:mm:ss a')}</p>
+                    <p>Newest Article: {newest.format('MMMM Do YYYY, h:mm:ss a')}</p>
+                </div>
+            );
+        }
+    }
+
+
     renderDetail() {
         const { selected, feed } = this.props;
         if (selected === feed.title) {
-            const feedMap = _.map(feed.items, (item, i) => (
-                <tr key={i}>
-                    <td>{item.title}</td>
-                    <td>{item.pubDate}</td>
-                    <td dangerouslySetInnerHTML={{ __html: item.content }} />
-                    <td>
-                        <a
-                            className="btn btn-primary"
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Go to Article
-                        </a>
-                    </td>
-                </tr>
-            ));
+            let sortedItems = _.sortBy(feed.items, (item) => {
+                switch (this.state.sortKey) {
+                    case 'pubDate':
+                        return new Date(item.pubDate);
+                    case 'title':
+                        return item.title;
+                    case 'content':
+                        return item.contentSnippet;
+                    default:
+                        return new Date(item.pubDate);
+                }
+            });
+            if (this.state.sortDir === 'desc') {
+                sortedItems = sortedItems.reverse();
+            }
+            const itemsRows = _.map(sortedItems, (item, i) => {
+                let image = null;
+                if (item.enclosure) {
+                    if (item.enclosure.type.search('image') >= 0) {
+                        image = <img className="img-fluid" src={item.enclosure.url} alt="item.title" />;
+                    }
+                }
+                return (
+                    <tr key={i}>
+                        <td>{item.title}</td>
+                        <td>{moment(item.pubDate).format('MMMM Do YYYY, h:mm:ss a')}</td>
+                        <td dangerouslySetInnerHTML={{ __html: item.contentSnippet }} />
+                        <td>{image}</td>
+                        <td>
+                            <a
+                                className="btn btn-primary"
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Go to Article
+                            </a>
+                        </td>
+                    </tr>
+                );
+            });
+
             return (
                 <div>
                     <table className="table">
+                        <thead>
+                            <tr>
+                                <th
+                                    onClick={() => this.setSort('title')}
+                                    style={styles.sortKey}
+                                >Title{this.renderSortIndicator('title')}</th>
+                                <th
+                                    onClick={() => this.setSort('pubDate')}
+                                    style={styles.sortKey}
+                                >Published{this.renderSortIndicator('pubDate')}</th>
+                                <th
+                                    onClick={() => this.setSort('content')}
+                                    style={styles.sortKey}
+                                >Summary{this.renderSortIndicator('content')}</th>
+                                <th />
+                                <th />
+                            </tr>
+                        </thead>
                         <tbody>
-                            {feedMap}
+                            {itemsRows}
                         </tbody>
                     </table>
                 </div>
@@ -65,6 +147,7 @@ class FeedDetail extends Component {
                     <div className="col-5">
                         <img src={imageUrl} alt="" style={{ maxHeight: 50 }} />
                         <h5>{feed.title}</h5>
+                        {this.renderOldestAndNewest()}
                     </div>
 
                     <div className="col-5">
@@ -104,6 +187,9 @@ const styles = {
     closeButton: {
         textAlign: 'right',
         marginTop: 15
+    },
+    sortKey: {
+        cursor: 'pointer'
     }
 };
 

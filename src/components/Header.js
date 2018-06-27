@@ -72,6 +72,16 @@ class Header extends Component {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">
+                            <a
+                                className="nav-link"
+                                href="https://github.com/patrickjmcd/rss-manager"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >Source Code</a>
+                        </li>
+                    </ul>
                     {this.renderForm()}
                     <ul className="navbar-nav ml-auto">
                         {this.renderLogOutButton()}
