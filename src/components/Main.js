@@ -1,45 +1,20 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { addFeed, fetchFeeds } from '../actions';
-import FeedOverview from './FeedOverview';
+import { addFeed, fetchFeeds, selectFeed } from '../actions';
+import FeedSidebar from './FeedSidebar';
+import FeedList from './FeedList';
+import FeedDetail from './FeedDetail';
+
 
 class Main extends Component {
-    state = {
-        newFeedUrl: '',
-        selectedFeed: ''
-    }
+
 
     componentWillMount() {
         this.props.fetchFeeds();
     }
 
-    newFeedButtonPressed(event) {
-        event.preventDefault();
-        console.log(this.state.newFeedUrl);
-        this.props.addFeed({ url: this.state.newFeedUrl });
-    }
-
-    feedSelected(title) {
-        console.log(title);
-        this.setState({ selectedFeed: title });
-    }
-
-    renderFeedList() {
-        const feedList = _.map(this.props.feeds, (feed) => (
-            <FeedOverview
-                title={feed.title}
-                key={feed.title}
-            />
-        ));
-        return (
-            <div className="row" style={{ marginTop: 20 }}>
-                {feedList}
-            </div>
-        );
-    }
 
     renderError() {
         if (this.props.error) {
@@ -56,36 +31,22 @@ class Main extends Component {
     }
 
     render() {
+        const { selected } = this.props;
         if (!this.props.user) {
             console.log('Need to be authenticated!!!');
             return <Redirect to="/" />;
         }
 
+        const sidebar = selected ? <FeedSidebar /> : null;
+        const feed = selected ? <FeedDetail title={selected} /> : <FeedList />;
         return (
             <div>
                 <h1>Your Feed</h1>
                 {this.renderError()}
-                <form className="col">
-                    <div className="form-group">
-                        <label htmlFor="feedUrl">New Feed URL</label>
-                        <input
-                            id="feedUrl"
-                            className="form-control"
-                            type="text"
-                            onChange={(e) => this.setState({ newFeedUrl: e.target.value })}
-                            placeholder="RSS Feed URL"
-                            value={this.state.newFeedUrl}
-                        />
-                    </div>
-
-                    <button
-                        className="btn btn-success"
-                        onClick={this.newFeedButtonPressed.bind(this)}
-                    >
-                        Add Feed
-                    </button>
-                </form>
-                {this.renderFeedList()}
+                <div className="row" style={{ marginTop: 20 }} >
+                    {sidebar}
+                    {feed}
+                </div>
             </div>
         );
     }
@@ -93,12 +54,12 @@ class Main extends Component {
 
 const mapStateToProps = (state) => {
     const { user } = state.auth;
-    const { feeds, error } = state.feeds;
+    const { error, selected } = state.feeds;
     return {
         user,
-        feeds,
-        error
+        error,
+        selected
      };
 };
 
-export default connect(mapStateToProps, { addFeed, fetchFeeds })(Main);
+export default connect(mapStateToProps, { addFeed, fetchFeeds, selectFeed })(Main);

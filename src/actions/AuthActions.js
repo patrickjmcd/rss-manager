@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 
-import { persistor } from '..';
+// import { persistor } from '..';
 
 import {
     USER_LOGIN_SUCCESS,
@@ -14,7 +14,7 @@ export const userLogout = () => {
     console.log('user logout');
     return (dispatch) => {
         firebase.auth().signOut().then(() => {
-            persistor.purge();
+            console.log(USER_LOGOUT_SUCCESS);
             dispatch({
                 type: USER_LOGOUT_SUCCESS,
             });

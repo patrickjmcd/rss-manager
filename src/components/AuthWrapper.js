@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 import Header from './Header';
 import Landing from './Landing';
@@ -25,7 +25,7 @@ class AuthWrapper extends Component {
             <BrowserRouter>
                 <div>
                     <Header />
-                    <div className="container">
+                    <div className="container-fluid">
                         <Switch>
                             <Route exact path='/' component={Landing} />
                             <Route path='/main' component={Main} />
