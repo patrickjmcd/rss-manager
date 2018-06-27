@@ -40,7 +40,7 @@ class Main extends Component {
         const sidebar = selected ? <FeedSidebar /> : null;
         const feed = selected ? <FeedDetail title={selected} /> : <FeedList />;
         return (
-            <div>
+            <div className="container-fluid">
                 <h1>Your Feed</h1>
                 {this.renderError()}
                 <div className="row" style={{ marginTop: 20 }} >

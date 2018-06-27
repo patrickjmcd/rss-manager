@@ -51,10 +51,12 @@ class FeedDetail extends Component {
                 <div className="row">
                     <div className="col-1 offset-11" style={styles.closeButton}>
                         <button
-                            className="btn btn-danger"
+                            type="button"
+                            className="close"
+                            aria-label="Close"
                             onClick={() => this.props.selectFeed({})}
                         >
-                            x
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                 </div>

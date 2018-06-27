@@ -25,12 +25,10 @@ class AuthWrapper extends Component {
             <BrowserRouter>
                 <div>
                     <Header />
-                    <div className="container-fluid">
-                        <Switch>
-                            <Route exact path='/' component={Landing} />
-                            <Route path='/main' component={Main} />
-                        </Switch>
-                    </div>
+                    <Switch>
+                        <Route exact path='/' component={Landing} />
+                        <Route path='/main' component={Main} />
+                    </Switch>
                 </div>
             </BrowserRouter>
         );

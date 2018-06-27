@@ -38,7 +38,7 @@ class Landing extends Component {
             return <Redirect to={from} />;
         }
         return (
-            <div style={{ marginTop: 15 }} >
+            <div style={{ marginTop: 15 }} className="container" >
                 <h1>Welcome!</h1>
                 <p>You've found the best RSS Parser on the web since Google Reader!</p>
                 <p>If you've been here before, enter your email address and password below to login</p>
