@@ -111,7 +111,8 @@ const styles = {
         border: '1px solid #ccc',
         marginBottom: 20,
         marginLeft: 10,
-        marginRight: 10
+        marginRight: 10,
+        cursor: 'pointer'
     },
     rowStyle: {
         paddingTop: 10,
